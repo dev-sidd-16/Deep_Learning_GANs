@@ -63,7 +63,7 @@ def train(BATCH_SIZE):
     (X_train, y_train), (X_test, y_test) = mnist.load_data()
     X_train = (X_train.astype(np.float32) - 127.5)/127.5
     #print X_train.shape
-    X_train = X_train.reshape((X_train.shape[0], 1) + X_train.shape[1:])
+    X_train = X_train.reshape(X_train.shape[0], X_train.shape[1], X_train.shape[2], 1)
     #print X_train.shape
     
     discriminator = discriminator_model()
@@ -95,7 +95,7 @@ def train(BATCH_SIZE):
 
             #print "Shape of noise:", noise.shape
             image_batch = X_train[index*BATCH_SIZE : (index+1)*BATCH_SIZE]
-            #print "Shape of iamge batch:", image_batch.shape
+            #print "Shape of image batch:", image_batch.shape
             generated_images = generator.predict(noise, verbose=1)
             #generated_images = generated_images.reshape((generated_images.shape[0], 1) + generated_images.shape[1:-1])
             print "Shape of generated image:", generated_images.shape
