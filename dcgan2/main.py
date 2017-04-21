@@ -45,18 +45,21 @@ def generator_containing_discriminator(generator, discriminator):
 	return model
 
 def combine_images(generated_images):
-	num = generated_images.shape[0]
-	width = int(math.sqrt(num))
-	height = int(math.ceil(float(num)/width))
-	shape = generated_images.shape[2:]
-	image = np.zeros((height*shape[0], width*shape[1]), dtype = generated_images.dtype)
-
-	for index, img in enumerate(generated_images):
-		i = int(index/width)
-		j = index % width
-		image[i*shape[0]:(i+1)*shape[0], j*shape[1]:(j+1)*shape[1]] = img[0, :, :]
-
-	return image
+    num = generated_images.shape[0]
+    width = int(math.sqrt(num))
+    #print width
+    height = int(math.ceil(float(num)/width))
+    #print width
+    shape = generated_images.shape[1:3]
+    #print shape
+    image = np.zeros((height*shape[0], width*shape[1]), dtype = generated_images.dtype)
+    #print image.shape
+    for index, img in enumerate(generated_images):
+        #print index, img.shape
+        i = int(index/width)
+        j = index % width
+        image[i*shape[0]:(i+1)*shape[0], j*shape[1]:(j+1)*shape[1]] = img[:, :, 0]
+    return image
 
 
 def train(BATCH_SIZE):
@@ -68,12 +71,12 @@ def train(BATCH_SIZE):
     
     discriminator = discriminator_model()
     generator = generator_model()
-    print generator.summary()
-    print discriminator.summary()
+    #print generator.summary()
+    #print discriminator.summary()
     #exit(0)
     discriminator_on_generator = \
         generator_containing_discriminator(generator, discriminator)
-    print discriminator_on_generator.summary()
+    #print discriminator_on_generator.summary()
     d_optim = SGD(lr=0.0005, momentum=0.9, nesterov=True)
     g_optim = SGD(lr=0.0005, momentum=0.9, nesterov=True)
     generator.compile(loss='binary_crossentropy', optimizer="SGD")
@@ -82,7 +85,7 @@ def train(BATCH_SIZE):
     discriminator.trainable = True
     discriminator.compile(loss='binary_crossentropy', optimizer=d_optim)
     noise = np.zeros((BATCH_SIZE, 100))
-    print noise.shape
+    #print noise.shape
     for epoch in range(100):
         print "Epoch:", epoch, "of 100"
         print "Number of batches: ", int(X_train.shape[0]/BATCH_SIZE)
@@ -104,6 +107,7 @@ def train(BATCH_SIZE):
                 image = image*127.5+127.5
                 Image.fromarray(image.astype(np.uint8)).save("results/"+ \
                     str(epoch)+"_"+str(index)+".png")
+                
             
             #print image_batch.shape
             #print generated_images.shape
