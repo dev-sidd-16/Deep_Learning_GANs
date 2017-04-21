@@ -86,7 +86,7 @@ def train(BATCH_SIZE):
     discriminator.compile(loss='binary_crossentropy', optimizer=d_optim)
     noise = np.zeros((BATCH_SIZE, 100))
     #print noise.shape
-    for epoch in range(100):
+    for epoch in range(50):
         print "Epoch:", epoch, "of 100"
         print "Number of batches: ", int(X_train.shape[0]/BATCH_SIZE)
 
@@ -101,7 +101,7 @@ def train(BATCH_SIZE):
             #print "Shape of image batch:", image_batch.shape
             generated_images = generator.predict(noise, verbose=1)
             #generated_images = generated_images.reshape((generated_images.shape[0], 1) + generated_images.shape[1:-1])
-            print "Shape of generated image:", generated_images.shape
+            #print "Shape of generated image:", generated_images.shape
             if index % 20 == 0:
                 image = combine_images(generated_images)
                 image = image*127.5+127.5
